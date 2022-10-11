@@ -8,11 +8,11 @@ from sklearn import metrics
 from sklearn.neighbors import KNeighborsClassifier
 import time
 
-
 # Title
 print("-----------------------------------------------------------------------------------------")
 print("                               AUTOMATING DATA ANALYSIS                                   ")
 print("-----------------------------------------------------------------------------------------")
+
 
 # File Upload Management-------------------------------------------------------------------------------------
 file_uploaded = False
@@ -35,6 +35,7 @@ while file_uploaded == False:
 
 
 #Functions For creating graphs, summarry reports, etc-----------------------------------------------------------
+cols = file.columns
 def create_graph(x, y, graph):
     if graph == "1":
         plt.scatter(file[x], file[y])
@@ -67,7 +68,6 @@ def summarry_report_full(file):
     print("----------------------------------------------------------------")
     print("--------------------FULL SUMMARRY REPORT------------------------")
     print("----------------------------------------------------------------\n")
-    cols = file.columns  # Array of every column value in dataframe
     for x in range(len(cols)):  # iterates through that array
         print("-------------------------------------------------------------")
         print(cols[x] + " Report: ")
@@ -76,8 +76,17 @@ def summarry_report_full(file):
 
 def print_cols(file):
     cols = file.columns
+    print("Enter the number next to column to select")
     for x in range(len(cols)):
         print("(" + str(x) + ")" +  " " + cols[x])
+
+
+def is_string(file, col):
+    val = str(file[col].iat[0])
+    if "1" in val or "2" in val or "3" in val or "4" in val or "5" in val or "6" in val or "7" in val or "8" in val or "9" in val or "0" in val:
+        return False
+    else:
+        return True
 
 
 # Main Loop-----------------------------------------------------------------------------------------------
@@ -102,8 +111,8 @@ while True:
         summ = input("Enter The Number Next To Your Choice: ")
         if summ == "1":
             print_cols(file)
-            column = input("What DO You Want To Summarize?: ")
-            summarry_report_col(file, column)
+            column = int(input("What DO You Want To Summarize?: "))
+            summarry_report_col(file, str(cols[column]))
         elif summ == "2":
             summarry_report_full(file)
         elif summ == "3":
@@ -115,17 +124,17 @@ while True:
         print("--------------------VISUALIZE DATA------------------------")
         print_cols(file)
         print("\n")
-        x = input("Enter Your x Value or enter 9999 to QUIT: ")
+        x = int(input("Enter Your x Value or enter 9999 to QUIT: "))
         if x == "9999":
             print("Leaving..")
         else:
-            y = input("Enter Your y Value: ")
+            y = int(input("Enter Your y Value: "))
             print("Graph Choices:")
             print("(1) ScatterPlot")
             print("(2) Lined Graph")
             print("(3) Bar Graph")
             graph = input("Enter Your Graph Choice: ")
-            create_graph(x, y, graph)
+            create_graph(cols[x], cols[y], graph)
 
     elif choice == "3":
         print("---------------------MACHINE LEARNING----------------------")
@@ -135,11 +144,11 @@ while True:
         # Then Allow user to input few value to predict the PREDICTVALUE
         # Algorithms Used Include : Linear Regression, Support Vector Machines, K Nearest Neighbors etc;
         print_cols(file)
-        predict = input("What do you want to predict? or enter 9999 to QUIT: ")
+        predict = int(input("What do you want to predict? or enter 9999 to QUIT: "))
         if predict == "9999":
             print("Leaving..")
         else:
-            print("DO you want to predict " + predict + " based on multiple factors or one factor?")
+            print("DO you want to predict " + str(cols[predict]) + " based on multiple factors or one factor?")
             print("(1) Multiple Values")
             print("(2) Single Value")
             multiple = input("Enter the number next to your choice: ")
@@ -147,24 +156,40 @@ while True:
                 # Multiple Values
                 print("Not yet coded....")
             elif multiple == "2":
-                print_cols(file)
-                based = input("Based On what would you like to predict " + predict + ": ")
-                data = file[[based, predict]]
-                try:
-                    X = np.array(data.drop([predict], 1))
-                    y = np.array(data[predict])
-                except:
-                    print("Error, Values Not Numerical")
-
-                # Creating Training Data
-                x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.01)
 
                 # All ALgorithm models
                 linear = linear_model.LinearRegression()
                 knn = KNeighborsClassifier(n_neighbors=1)
                 SVM = svm.SVC(kernel="linear")
+                le = preprocessing.LabelEncoder()
 
-                # Converting String TO predictable form
+
+                print_cols(file)
+                based = int(input("Based On what would you like to predict " + str(cols[predict]) + ": "))
+                #based = cols[based]
+                data = file[[cols[based], cols[predict]]]
+
+                # based and predict are nums
+                #convert them to their string
+                #check if they are string
+                #if yes, labelencode
+                #else continue
+                #------------------------------------------------------------------------------------------------------
+
+                X = np.array(data.drop([cols[predict]], 1))
+                y = np.array(data[[cols[predict]]])
+                # y is want you want to predict
+                # x is what you are using to predict y
+                #x true y false
+                #x false y true
+                #x true y true
+                #x false y false
+
+
+                #----------------------------------------------------------------------------------------------------------
+
+                # Creating Training Data
+                x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.01)
 
                 # Determining which algorithm is best
                 linear.fit(x_train, y_train)
@@ -190,14 +215,14 @@ while True:
                         # x_test[x]       What is being used to predict
                         # y_test[x]       what is being predicted
                         print("-------------------------------------")
-                        print("Algorithm Prediction For " + predict + ": " + str(predictions[x]))
-                        print("Actual " + predict + ": " + str(y_test[x]))
+                        print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
+                        print("Actual " + cols[predict] + ": " + str(y_test[x]))
                     print("\n\n")
-                    predict_option = int(input("Enter a " + based + ": "))
+                    predict_option = int(input("Enter a " + cols[based] + ": "))
                     array = [[predict_option]]
                     predictions = linear.predict(array)
                     for x in range(len(predictions)):
-                        print("Predicted " + predict + ": " + str(predictions[x]))
+                        print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 elif kacc > lacc:
                     time.sleep(3)
                     print("--------------------------Algorithm Selected--------------------------")
@@ -212,14 +237,14 @@ while True:
                         # x_test[x]       What is being used to predict
                         # y_test[x]       what is being predicted
                         print("-------------------------------------")
-                        print("Algorithm Prediction For " + predict + ": " + str(predictions[x]))
-                        print("Actual " + predict + ": " + str(y_test[x]))
+                        print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
+                        print("Actual " + cols[predict] + ": " + str(y_test[x]))
                     print("\n\n")
-                    predict_option = int(input("Enter a " + based + ": "))
+                    predict_option = int(input("Enter a " + cols[based] + ": "))
                     array = [[predict_option]]
                     predictions = knn.predict(array)
                     for x in range(len(predictions)):
-                        print("Predicted " + predict + ": " + str(predictions[x]))
+                        print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 elif sacc > lacc:
                     time.sleep(3)
                     print("--------------------------Algorithm Selected--------------------------")
@@ -234,14 +259,14 @@ while True:
                         # x_test[x]       What is being used to predict
                         # y_test[x]       what is being predicted
                         print("-------------------------------------")
-                        print("Algorithm Prediction For " + predict + ": " + str(predictions[x]))
-                        print("Actual " + predict + ": " + str(y_test[x]))
+                        print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
+                        print("Actual " + cols[predict] + ": " + str(y_test[x]))
                     print("\n\n")
-                    predict_option = int(input("Enter a " + based + ": "))
+                    predict_option = int(input("Enter a " + cols[based] + ": "))
                     array = [[predict_option]]
                     predictions = knn.predict(array)
                     for x in range(len(predictions)):
-                        print("Predicted " + predict + ": " + str(predictions[x]))
+                        print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 elif sacc > kacc:
                     time.sleep(3)
                     print("--------------------------Algorithm Selected--------------------------")
@@ -256,14 +281,14 @@ while True:
                         # x_test[x]       What is being used to predict
                         # y_test[x]       what is being predicted
                         print("-------------------------------------")
-                        print("Algorithm Prediction For " + predict + ": " + str(predictions[x]))
-                        print("Actual " + predict + ": " + str(y_test[x]))
+                        print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
+                        print("Actual " + cols[predict] + ": " + str(y_test[x]))
                     print("\n\n")
-                    predict_option = int(input("Enter a " + based + ": "))
+                    predict_option = int(input("Enter a " + cols[based] + ": "))
                     array = [[predict_option]]
                     predictions = SVM.predict(array)
                     for x in range(len(predictions)):
-                        print("Predicted " + predict + ": " + str(predictions[x]))
+                        print("Predicted " + cols[predict] + ": " + str(predictions[x]))
 
     elif choice == "4":
         exit()
