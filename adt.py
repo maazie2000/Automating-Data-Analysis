@@ -5,6 +5,7 @@ import sklearn
 from sklearn import linear_model, preprocessing
 from sklearn import svm
 from sklearn import metrics
+from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 import time
 
@@ -63,6 +64,7 @@ def summarry_report_col(file, col):
     print("--------------------" + col + " SUMMARRY REPORT------------------------")
     print("----------------------------------------------------------------\n")
     print(file[col].value_counts())
+
 
 def summarry_report_full(file):
     print("----------------------------------------------------------------")
@@ -148,147 +150,153 @@ while True:
         if predict == "9999":
             print("Leaving..")
         else:
-            print("DO you want to predict " + str(cols[predict]) + " based on multiple factors or one factor?")
-            print("(1) Multiple Values")
-            print("(2) Single Value")
-            multiple = input("Enter the number next to your choice: ")
-            if multiple == "1":
-                # Multiple Values
-                print("Not yet coded....")
-            elif multiple == "2":
+            # All ALgorithm models
+            linear = linear_model.LinearRegression()
+            knn = KNeighborsClassifier(n_neighbors=1)
+            SVM = svm.SVC(kernel="linear")
+            le = preprocessing.LabelEncoder()
 
-                # All ALgorithm models
-                linear = linear_model.LinearRegression()
-                knn = KNeighborsClassifier(n_neighbors=1)
-                SVM = svm.SVC(kernel="linear")
-                le = preprocessing.LabelEncoder()
+            print_cols(file)
+            based = int(input("Based On what would you like to predict " + str(cols[predict]) + ": "))
+            # based = cols[based]
+            data = file[[cols[based], cols[predict]]]
 
+            # based and predict are nums
+            # convert them to their string
+            # check if they are string
+            # if yes, labelencode
+            # else continue
+            # ------------------------------------------------------------------------------------------------------
 
-                print_cols(file)
-                based = int(input("Based On what would you like to predict " + str(cols[predict]) + ": "))
-                #based = cols[based]
-                data = file[[cols[based], cols[predict]]]
-
-                # based and predict are nums
-                #convert them to their string
-                #check if they are string
-                #if yes, labelencode
-                #else continue
-                #------------------------------------------------------------------------------------------------------
-
+            # y is want you want to predict
+            # x is what you are using to predict y
+            # x true y false
+            # x false y true
+            # x true y true
+            # x false y false
+            if is_string(file, cols[based]) == True and is_string(file, cols[predict]) == False:
+                based_option = le.fit_transform(list(data[cols[based]]))
+                X = np.array([based_option])
+                y = np.array(data[[cols[predict]]])
+                X = X.transpose()
+            elif is_string(file, cols[based]) == False and is_string(file, cols[predict]) == True:
+                predict_option = le.fit_transform(list(data[cols[predict]]))
+                X = np.array(data.drop([cols[predict]], 1))
+                y = np.array([predict_option])
+                X = X.transpose()
+            elif is_string(file, cols[based]) == True and is_string(file, cols[predict]) == True:
+                based_option = le.fit_transform(list(data[cols[based]]))
+                predict_option = le.fit_transform(list(data[cols[predict]]))
+                X = np.array([based_option])
+                y = np.array(predict_option)
+                X = X.transpose()
+            else:
                 X = np.array(data.drop([cols[predict]], 1))
                 y = np.array(data[[cols[predict]]])
-                # y is want you want to predict
-                # x is what you are using to predict y
-                #x true y false
-                #x false y true
-                #x true y true
-                #x false y false
 
+            # ----------------------------------------------------------------------------------------------------------
 
-                #----------------------------------------------------------------------------------------------------------
+            # Creating Training Data
+            x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.1)
 
-                # Creating Training Data
-                x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.01)
-
-                # Determining which algorithm is best
-                linear.fit(x_train, y_train)
-                lacc = linear.score(x_test, y_test)
-                knn.fit(x_train, y_train)
-                kacc = knn.score(x_test, y_test)
-                SVM.fit(x_train, y_train)
-                sacc = SVM.score(x_test, y_test)
-                print("Algorithm 1 Efficiency: " + str(round(lacc*100)))
-                print("Algorithm 2 Efficiency: " + str(round(kacc*100)))
-                print("Algorithm 3 Efficiency: " + str((round(sacc))))
-                if lacc > kacc:
-                    time.sleep(3)
-                    print("--------------------------Algorithm Selected--------------------------")
-                    time.sleep(2)
-                    print("Algorithm Efficiency: " + str(round(lacc * 100)))
-                    time.sleep(3)
-                    print("Test Results: ")
-                    time.sleep(2)
-                    predictions = linear.predict(x_test)
-                    for x in range(len(predictions)):
-                        # predictions[x]  what computer predicted
-                        # x_test[x]       What is being used to predict
-                        # y_test[x]       what is being predicted
-                        print("-------------------------------------")
-                        print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
-                        print("Actual " + cols[predict] + ": " + str(y_test[x]))
-                    print("\n\n")
-                    predict_option = int(input("Enter a " + cols[based] + ": "))
-                    array = [[predict_option]]
-                    predictions = linear.predict(array)
-                    for x in range(len(predictions)):
-                        print("Predicted " + cols[predict] + ": " + str(predictions[x]))
-                elif kacc > lacc:
-                    time.sleep(3)
-                    print("--------------------------Algorithm Selected--------------------------")
-                    time.sleep(2)
-                    print("Algorithm Efficiency: " + str(round(kacc * 100)))
-                    time.sleep(3)
-                    print("Test Results: ")
-                    time.sleep(2)
-                    predictions = knn.predict(x_test)
-                    for x in range(len(predictions)):
-                        # predictions[x]  what computer predicted
-                        # x_test[x]       What is being used to predict
-                        # y_test[x]       what is being predicted
-                        print("-------------------------------------")
-                        print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
-                        print("Actual " + cols[predict] + ": " + str(y_test[x]))
-                    print("\n\n")
-                    predict_option = int(input("Enter a " + cols[based] + ": "))
-                    array = [[predict_option]]
-                    predictions = knn.predict(array)
-                    for x in range(len(predictions)):
-                        print("Predicted " + cols[predict] + ": " + str(predictions[x]))
-                elif sacc > lacc:
-                    time.sleep(3)
-                    print("--------------------------Algorithm Selected--------------------------")
-                    time.sleep(2)
-                    print("Algorithm Efficiency: " + str(round(kacc * 100)))
-                    time.sleep(3)
-                    print("Test Results: ")
-                    time.sleep(2)
-                    predictions = SVM.predict(x_test)
-                    for x in range(len(predictions)):
-                        # predictions[x]  what computer predicted
-                        # x_test[x]       What is being used to predict
-                        # y_test[x]       what is being predicted
-                        print("-------------------------------------")
-                        print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
-                        print("Actual " + cols[predict] + ": " + str(y_test[x]))
-                    print("\n\n")
-                    predict_option = int(input("Enter a " + cols[based] + ": "))
-                    array = [[predict_option]]
-                    predictions = knn.predict(array)
-                    for x in range(len(predictions)):
-                        print("Predicted " + cols[predict] + ": " + str(predictions[x]))
-                elif sacc > kacc:
-                    time.sleep(3)
-                    print("--------------------------Algorithm Selected--------------------------")
-                    time.sleep(2)
-                    print("Algorithm Efficiency: " + str(round(kacc * 100)))
-                    time.sleep(3)
-                    print("Test Results: ")
-                    time.sleep(2)
-                    predictions = knn.predict(x_test)
-                    for x in range(len(predictions)):
-                        # predictions[x]  what computer predicted
-                        # x_test[x]       What is being used to predict
-                        # y_test[x]       what is being predicted
-                        print("-------------------------------------")
-                        print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
-                        print("Actual " + cols[predict] + ": " + str(y_test[x]))
-                    print("\n\n")
-                    predict_option = int(input("Enter a " + cols[based] + ": "))
-                    array = [[predict_option]]
-                    predictions = SVM.predict(array)
-                    for x in range(len(predictions)):
-                        print("Predicted " + cols[predict] + ": " + str(predictions[x]))
+            # Determining which algorithm is best
+            linear.fit(x_train, y_train)
+            lacc = linear.score(x_test, y_test)
+            knn.fit(x_train, y_train)
+            kacc = knn.score(x_test, y_test)
+            SVM.fit(x_train, y_train)
+            sacc = SVM.score(x_test, y_test)
+            print("Algorithm 1 Efficiency: " + str(round(lacc * 100)))
+            print("Algorithm 2 Efficiency: " + str(round(kacc * 100)))
+            print("Algorithm 3 Efficiency: " + str((round(sacc))))
+            if lacc > kacc:
+                time.sleep(3)
+                print("--------------------------Algorithm Selected--------------------------")
+                time.sleep(2)
+                print("Algorithm Efficiency: " + str(round(lacc * 100)))
+                time.sleep(3)
+                print("Test Results: ")
+                time.sleep(2)
+                predictions = linear.predict(x_test)
+                for x in range(len(predictions)):
+                    # predictions[x]  what computer predicted
+                    # x_test[x]       What is being used to predict
+                    # y_test[x]       what is being predicted
+                    print("-------------------------------------")
+                    print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
+                    print("Actual " + cols[predict] + ": " + str(y_test[x]))
+                print("\n\n")
+                predict_option = int(input("Enter a " + cols[based] + ": "))
+                array = [[predict_option]]
+                predictions = linear.predict(array)
+                for x in range(len(predictions)):
+                    print("Predicted " + cols[predict] + ": " + str(predictions[x]))
+            elif kacc > lacc:
+                time.sleep(3)
+                print("--------------------------Algorithm Selected--------------------------")
+                time.sleep(2)
+                print("Algorithm Efficiency: " + str(round(kacc * 100)))
+                time.sleep(3)
+                print("Test Results: ")
+                time.sleep(2)
+                predictions = knn.predict(x_test)
+                for x in range(len(predictions)):
+                    # predictions[x]  what computer predicted
+                    # x_test[x]       What is being used to predict
+                    # y_test[x]       what is being predicted
+                    print("-------------------------------------")
+                    print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
+                    print("Actual " + cols[predict] + ": " + str(y_test[x]))
+                print("\n\n")
+                predict_option = int(input("Enter a " + cols[based] + ": "))
+                array = [[predict_option]]
+                predictions = knn.predict(array)
+                for x in range(len(predictions)):
+                    print("Predicted " + cols[predict] + ": " + str(predictions[x]))
+            elif sacc > lacc:
+                time.sleep(3)
+                print("--------------------------Algorithm Selected--------------------------")
+                time.sleep(2)
+                print("Algorithm Efficiency: " + str(round(kacc * 100)))
+                time.sleep(3)
+                print("Test Results: ")
+                time.sleep(2)
+                predictions = SVM.predict(x_test)
+                for x in range(len(predictions)):
+                    # predictions[x]  what computer predicted
+                    # x_test[x]       What is being used to predict
+                    # y_test[x]       what is being predicted
+                    print("-------------------------------------")
+                    print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
+                    print("Actual " + cols[predict] + ": " + str(y_test[x]))
+                print("\n\n")
+                predict_option = int(input("Enter a " + cols[based] + ": "))
+                array = [[predict_option]]
+                predictions = knn.predict(array)
+                for x in range(len(predictions)):
+                    print("Predicted " + cols[predict] + ": " + str(predictions[x]))
+            elif sacc > kacc:
+                time.sleep(3)
+                print("--------------------------Algorithm Selected--------------------------")
+                time.sleep(2)
+                print("Algorithm Efficiency: " + str(round(kacc * 100)))
+                time.sleep(3)
+                print("Test Results: ")
+                time.sleep(2)
+                predictions = knn.predict(x_test)
+                for x in range(len(predictions)):
+                    # predictions[x]  what computer predicted
+                    # x_test[x]       What is being used to predict
+                    # y_test[x]       what is being predicted
+                    print("-------------------------------------")
+                    print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
+                    print("Actual " + cols[predict] + ": " + str(y_test[x]))
+                print("\n\n")
+                predict_option = int(input("Enter a " + cols[based] + ": "))
+                array = [[predict_option]]
+                predictions = SVM.predict(array)
+                for x in range(len(predictions)):
+                    print("Predicted " + cols[predict] + ": " + str(predictions[x]))
 
     elif choice == "4":
         exit()
