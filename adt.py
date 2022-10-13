@@ -153,7 +153,7 @@ while True:
             # All ALgorithm models
             linear = linear_model.LinearRegression()
             knn = KNeighborsClassifier(n_neighbors=1)
-            SVM = svm.SVC(kernel="linear")
+            SVM = svm.SVC()
             le = preprocessing.LabelEncoder()
 
             print_cols(file)
@@ -179,17 +179,21 @@ while True:
                 X = np.array([based_option])
                 y = np.array(data[[cols[predict]]])
                 X = X.transpose()
+                #WORKS
+
             elif is_string(file, cols[based]) == False and is_string(file, cols[predict]) == True:
                 predict_option = le.fit_transform(list(data[cols[predict]]))
                 X = np.array(data.drop([cols[predict]], 1))
-                y = np.array([predict_option])
-                X = X.transpose()
+                y = np.array(predict_option)
+                #WORKS
+
             elif is_string(file, cols[based]) == True and is_string(file, cols[predict]) == True:
                 based_option = le.fit_transform(list(data[cols[based]]))
                 predict_option = le.fit_transform(list(data[cols[predict]]))
                 X = np.array([based_option])
                 y = np.array(predict_option)
                 X = X.transpose()
+
             else:
                 X = np.array(data.drop([cols[predict]], 1))
                 y = np.array(data[[cols[predict]]])
@@ -218,6 +222,8 @@ while True:
                 print("Test Results: ")
                 time.sleep(2)
                 predictions = linear.predict(x_test)
+                predictions = le.inverse_transform(predictions)
+                y_test = le.inverse_transform(y_test)
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
@@ -229,6 +235,7 @@ while True:
                 predict_option = int(input("Enter a " + cols[based] + ": "))
                 array = [[predict_option]]
                 predictions = linear.predict(array)
+                predictions = le.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
             elif kacc > lacc:
@@ -240,6 +247,8 @@ while True:
                 print("Test Results: ")
                 time.sleep(2)
                 predictions = knn.predict(x_test)
+                predictions = le.inverse_transform(predictions)
+                y_test = le.inverse_transform(y_test)
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
@@ -251,6 +260,7 @@ while True:
                 predict_option = int(input("Enter a " + cols[based] + ": "))
                 array = [[predict_option]]
                 predictions = knn.predict(array)
+                predictions = le.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
             elif sacc > lacc:
@@ -262,6 +272,8 @@ while True:
                 print("Test Results: ")
                 time.sleep(2)
                 predictions = SVM.predict(x_test)
+                predictions = le.inverse_transform(predictions)
+                y_test = le.inverse_transform(y_test)
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
@@ -272,7 +284,8 @@ while True:
                 print("\n\n")
                 predict_option = int(input("Enter a " + cols[based] + ": "))
                 array = [[predict_option]]
-                predictions = knn.predict(array)
+                predictions = SVM.predict(array)
+                predictions = le.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
             elif sacc > kacc:
@@ -283,7 +296,9 @@ while True:
                 time.sleep(3)
                 print("Test Results: ")
                 time.sleep(2)
-                predictions = knn.predict(x_test)
+                predictions = SVM.predict(x_test)
+                predictions = le.inverse_transform(predictions)
+                y_test = le.inverse_transform(y_test)
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
