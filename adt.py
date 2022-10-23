@@ -6,6 +6,7 @@ from sklearn import linear_model, preprocessing
 from sklearn import svm
 from sklearn import metrics
 from sklearn.model_selection import train_test_split
+from sklearn import tree
 from sklearn.neighbors import KNeighborsClassifier
 import time
 
@@ -152,8 +153,9 @@ while True:
         else:
             # All ALgorithm models
             linear = linear_model.LinearRegression()
-            knn = KNeighborsClassifier(n_neighbors=1)
+            knn = KNeighborsClassifier(n_neighbors=11)
             SVM = svm.SVC()
+            tr = tree.DecisionTreeClassifier()
             le = preprocessing.LabelEncoder()
 
             print_cols(file)
@@ -174,17 +176,22 @@ while True:
             # x false y true
             # x true y true
             # x false y false
+            x_string = False
+            y_string = False
+
             if is_string(file, cols[based]) == True and is_string(file, cols[predict]) == False:
                 based_option = le.fit_transform(list(data[cols[based]]))
                 X = np.array([based_option])
                 y = np.array(data[[cols[predict]]])
                 X = X.transpose()
+                x_string = True
                 #WORKS
 
             elif is_string(file, cols[based]) == False and is_string(file, cols[predict]) == True:
                 predict_option = le.fit_transform(list(data[cols[predict]]))
                 X = np.array(data.drop([cols[predict]], 1))
                 y = np.array(predict_option)
+                y_string = True
                 #WORKS
 
             elif is_string(file, cols[based]) == True and is_string(file, cols[predict]) == True:
@@ -193,6 +200,8 @@ while True:
                 X = np.array([based_option])
                 y = np.array(predict_option)
                 X = X.transpose()
+                x_string = True
+                y_string = True
 
             else:
                 X = np.array(data.drop([cols[predict]], 1))
@@ -206,14 +215,35 @@ while True:
             # Determining which algorithm is best
             linear.fit(x_train, y_train)
             lacc = linear.score(x_test, y_test)
+
             knn.fit(x_train, y_train)
             kacc = knn.score(x_test, y_test)
+
             SVM.fit(x_train, y_train)
             sacc = SVM.score(x_test, y_test)
-            print("Algorithm 1 Efficiency: " + str(round(lacc * 100)))
-            print("Algorithm 2 Efficiency: " + str(round(kacc * 100)))
-            print("Algorithm 3 Efficiency: " + str((round(sacc))))
-            if lacc > kacc:
+
+            tr.fit(x_train, y_train)
+            tacc = tr.score(x_test, y_test)
+
+            print("AI 1 Efficiency: " + str(lacc * 100))
+            print("AI 2 Efficiency: " + str(kacc * 100))
+            print("AI 3 Efficiency: " + str(sacc * 100))
+            print("AI 4 Efficiency: " + str(tacc * 100))
+
+            #Determining Best ALgorithm
+            select = 0
+            select = max(select, round(lacc))
+            select = max(select, round(kacc))
+            select = max(select, round(sacc))
+            select = max(select, round(tacc))
+
+
+            # Issues To adress or fix:
+            # 1) Inverse transform will return error when value is not encoded so check for that first
+            # 2) Add many more algorithms for better chance and proficiency
+            # 3) Convert to exe
+            # 4) Create logo and give a name to software
+            if select == round(lacc):
                 time.sleep(3)
                 print("--------------------------Algorithm Selected--------------------------")
                 time.sleep(2)
@@ -222,96 +252,134 @@ while True:
                 print("Test Results: ")
                 time.sleep(2)
                 predictions = linear.predict(x_test)
-                predictions = le.inverse_transform(predictions)
-                y_test = le.inverse_transform(y_test)
+                if y_string == True:
+                    predictions = le.inverse_transform(predictions)
+                    y_test = le.inverse_transform(y_test)
+                if x_string == True:
+                    x_test = le.inverse_transform(x_test)
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
                     # y_test[x]       what is being predicted
                     print("-------------------------------------")
-                    print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
+                    print(cols[based] + ": " + str(x_test[x]))
+                    print("AI Prediction For " + cols[predict] + ": " + str(predictions[x]))
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
                 predict_option = int(input("Enter a " + cols[based] + ": "))
+                if x_string == True:
+                    predict_option = le.fit_transform(predict_option)
                 array = [[predict_option]]
                 predictions = linear.predict(array)
-                predictions = le.inverse_transform(predictions)
+                if x_string == True:
+                    predictions = le.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
-            elif kacc > lacc:
+                x_string = False
+                y_string = False
+            elif select == round(kacc):
                 time.sleep(3)
                 print("--------------------------Algorithm Selected--------------------------")
                 time.sleep(2)
-                print("Algorithm Efficiency: " + str(round(kacc * 100)))
+                print("Algorithm Efficiency: " + str(round(lacc * 100)))
                 time.sleep(3)
                 print("Test Results: ")
                 time.sleep(2)
                 predictions = knn.predict(x_test)
-                predictions = le.inverse_transform(predictions)
-                y_test = le.inverse_transform(y_test)
+                if y_string == True:
+                    predictions = le.inverse_transform(predictions)
+                    y_test = le.inverse_transform(y_test)
+                if x_string == True:
+                    x_test = le.inverse_transform(x_test)
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
                     # y_test[x]       what is being predicted
                     print("-------------------------------------")
-                    print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
+                    print(cols[based] + ": " + str(x_test[x]))
+                    print("AI Prediction For " + cols[predict] + ": " + str(predictions[x]))
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
                 predict_option = int(input("Enter a " + cols[based] + ": "))
+                if x_string == True:
+                    predict_option = le.fit_transform(predict_option)
                 array = [[predict_option]]
                 predictions = knn.predict(array)
-                predictions = le.inverse_transform(predictions)
+                if x_string == True:
+                    predictions = le.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
-            elif sacc > lacc:
+                x_string = False
+                y_string = False
+            elif select == round(sacc):
                 time.sleep(3)
                 print("--------------------------Algorithm Selected--------------------------")
                 time.sleep(2)
-                print("Algorithm Efficiency: " + str(round(kacc * 100)))
+                print("Algorithm Efficiency: " + str(round(lacc * 100)))
                 time.sleep(3)
                 print("Test Results: ")
                 time.sleep(2)
                 predictions = SVM.predict(x_test)
-                predictions = le.inverse_transform(predictions)
-                y_test = le.inverse_transform(y_test)
+                if y_string == True:
+                    predictions = le.inverse_transform(predictions)
+                    y_test = le.inverse_transform(y_test)
+                if x_string == True:
+                    x_test = le.inverse_transform(x_test)
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
                     # y_test[x]       what is being predicted
                     print("-------------------------------------")
-                    print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
+                    print(cols[based] + ": " + str(x_test[x]))
+                    print("AI Prediction For " + cols[predict] + ": " + str(predictions[x]))
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
                 predict_option = int(input("Enter a " + cols[based] + ": "))
+                if x_string == True:
+                    predict_option = le.fit_transform(predict_option)
                 array = [[predict_option]]
                 predictions = SVM.predict(array)
-                predictions = le.inverse_transform(predictions)
+                if x_string == True:
+                    predictions = le.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
-            elif sacc > kacc:
+                x_string = False
+                y_string = False
+
+            elif select == round(tacc):
                 time.sleep(3)
                 print("--------------------------Algorithm Selected--------------------------")
                 time.sleep(2)
-                print("Algorithm Efficiency: " + str(round(kacc * 100)))
+                print("Algorithm Efficiency: " + str(round(lacc * 100)))
                 time.sleep(3)
                 print("Test Results: ")
                 time.sleep(2)
-                predictions = SVM.predict(x_test)
-                predictions = le.inverse_transform(predictions)
-                y_test = le.inverse_transform(y_test)
+                predictions = tr.predict(x_test)
+                if y_string == True:
+                    predictions = le.inverse_transform(predictions)
+                    y_test = le.inverse_transform(y_test)
+                if x_string == True:
+                    x_test = le.inverse_transform(x_test)
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
                     # y_test[x]       what is being predicted
                     print("-------------------------------------")
-                    print("Algorithm Prediction For " + cols[predict] + ": " + str(predictions[x]))
+                    print(cols[based] + ": " + str(x_test[x]))
+                    print("AI Prediction For " + cols[predict] + ": " + str(predictions[x]))
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
                 predict_option = int(input("Enter a " + cols[based] + ": "))
+                if x_string == True:
+                    predict_option = le.fit_transform(predict_option)
                 array = [[predict_option]]
-                predictions = SVM.predict(array)
+                predictions = tr.predict(array)
+                if x_string == True:
+                    predictions = le.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
+                x_string = False
+                y_string = False
 
     elif choice == "4":
         exit()
