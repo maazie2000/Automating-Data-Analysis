@@ -225,10 +225,10 @@ while True:
             tr.fit(x_train, y_train)
             tacc = tr.score(x_test, y_test)
 
-            print("AI 1 Efficiency: " + str(lacc * 100))
-            print("AI 2 Efficiency: " + str(kacc * 100))
-            print("AI 3 Efficiency: " + str(sacc * 100))
-            print("AI 4 Efficiency: " + str(tacc * 100))
+            print("AI 1 Efficiency: " + str(round(lacc * 100)))
+            print("AI 2 Efficiency: " + str(round(kacc * 100)))
+            print("AI 3 Efficiency: " + str(round(sacc * 100)))
+            print("AI 4 Efficiency: " + str(round(tacc * 100)))
 
             #Determining Best ALgorithm
             select = 0
@@ -267,12 +267,10 @@ while True:
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
                 predict_option = int(input("Enter a " + cols[based] + ": "))
-                if x_string == True:
-                    predict_option = le.fit_transform(predict_option)
+
                 array = [[predict_option]]
                 predictions = linear.predict(array)
-                if x_string == True:
-                    predictions = le.inverse_transform(predictions)
+
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
@@ -281,7 +279,7 @@ while True:
                 time.sleep(3)
                 print("--------------------------Algorithm Selected--------------------------")
                 time.sleep(2)
-                print("Algorithm Efficiency: " + str(round(lacc * 100)))
+                print("Algorithm Efficiency: " + str(round(kacc * 100)))
                 time.sleep(3)
                 print("Test Results: ")
                 time.sleep(2)
@@ -301,12 +299,10 @@ while True:
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
                 predict_option = int(input("Enter a " + cols[based] + ": "))
-                if x_string == True:
-                    predict_option = le.fit_transform(predict_option)
+
                 array = [[predict_option]]
                 predictions = knn.predict(array)
-                if x_string == True:
-                    predictions = le.inverse_transform(predictions)
+
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
@@ -315,7 +311,7 @@ while True:
                 time.sleep(3)
                 print("--------------------------Algorithm Selected--------------------------")
                 time.sleep(2)
-                print("Algorithm Efficiency: " + str(round(lacc * 100)))
+                print("Algorithm Efficiency: " + str(round(sacc * 100)))
                 time.sleep(3)
                 print("Test Results: ")
                 time.sleep(2)
@@ -335,12 +331,10 @@ while True:
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
                 predict_option = int(input("Enter a " + cols[based] + ": "))
-                if x_string == True:
-                    predict_option = le.fit_transform(predict_option)
+
                 array = [[predict_option]]
                 predictions = SVM.predict(array)
-                if x_string == True:
-                    predictions = le.inverse_transform(predictions)
+
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
@@ -350,7 +344,7 @@ while True:
                 time.sleep(3)
                 print("--------------------------Algorithm Selected--------------------------")
                 time.sleep(2)
-                print("Algorithm Efficiency: " + str(round(lacc * 100)))
+                print("Algorithm Efficiency: " + str(round(tacc * 100)))
                 time.sleep(3)
                 print("Test Results: ")
                 time.sleep(2)
@@ -370,12 +364,10 @@ while True:
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
                 predict_option = int(input("Enter a " + cols[based] + ": "))
-                if x_string == True:
-                    predict_option = le.fit_transform(predict_option)
+
                 array = [[predict_option]]
                 predictions = tr.predict(array)
-                if x_string == True:
-                    predictions = le.inverse_transform(predictions)
+
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
