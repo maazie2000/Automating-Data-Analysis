@@ -210,7 +210,8 @@ while True:
             # ----------------------------------------------------------------------------------------------------------
 
             # Creating Training Data
-            x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.1)
+            x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.3)
+
 
             # Determining which algorithm is best
             linear.fit(x_train, y_train)
@@ -240,6 +241,7 @@ while True:
 
             # Issues To adress or fix:
             # 1) Inverse transform will return error when value is not encoded so check for that first
+            # Extra : If not properly encodedc returns error
             # 2) Add many more algorithms for better chance and proficiency
             # 3) Convert to exe
             # 4) Create logo and give a name to software
@@ -252,11 +254,13 @@ while True:
                 print("Test Results: ")
                 time.sleep(2)
                 predictions = linear.predict(x_test)
+                if x_string == True:
+                    x_test = le.inverse_transform(x_test)
+
                 if y_string == True:
                     predictions = le.inverse_transform(predictions)
                     y_test = le.inverse_transform(y_test)
-                if x_string == True:
-                    x_test = le.inverse_transform(x_test)
+
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
