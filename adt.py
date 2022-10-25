@@ -232,24 +232,22 @@ while True:
             print("AI 4 Efficiency: " + str(round(tacc * 100)))
 
             #Determining Best ALgorithm
-            select = 0
-            select = max(select, round(lacc))
-            select = max(select, round(kacc))
-            select = max(select, round(sacc))
-            select = max(select, round(tacc))
+            list = [lacc, kacc, sacc, tacc]
+            select = max(list)
 
 
             # Issues To adress or fix:
-            # 1) Inverse transform will return error when value is not encoded so check for that first
-            # Extra : If not properly encodedc returns error
+            # 1) The predict part input.
             # 2) Add many more algorithms for better chance and proficiency
             # 3) Convert to exe
             # 4) Create logo and give a name to software
-            if select == round(lacc):
+
+            # Linear Regression-----------------------------------------------------------------------------------
+            if select == lacc:
                 time.sleep(3)
-                print("--------------------------Algorithm Selected--------------------------")
+                print("--------------------------AI Selected--------------------------")
                 time.sleep(2)
-                print("Algorithm Efficiency: " + str(round(lacc * 100)))
+                print("AI 1 Efficiency: " + str(round(lacc * 100)))
                 time.sleep(3)
                 print("Test Results: ")
                 time.sleep(2)
@@ -258,9 +256,9 @@ while True:
                     x_test = le.inverse_transform(x_test)
 
                 if y_string == True:
+                    print(le.classes_)
                     predictions = le.inverse_transform(predictions)
                     y_test = le.inverse_transform(y_test)
-
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
@@ -279,20 +277,25 @@ while True:
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
                 y_string = False
-            elif select == round(kacc):
+
+
+            # K Nearest Neighbors----------------------------------------------------------------------------------
+            elif select == kacc:
                 time.sleep(3)
-                print("--------------------------Algorithm Selected--------------------------")
+                print("--------------------------AI Selected--------------------------")
                 time.sleep(2)
-                print("Algorithm Efficiency: " + str(round(kacc * 100)))
+                print("AI 2 Efficiency: " + str(round(kacc * 100)))
                 time.sleep(3)
                 print("Test Results: ")
                 time.sleep(2)
                 predictions = knn.predict(x_test)
-                if y_string == True:
-                    predictions = le.inverse_transform(predictions)
-                    y_test = le.inverse_transform(y_test)
                 if x_string == True:
                     x_test = le.inverse_transform(x_test)
+
+                if y_string == True:
+                    print(le.classes_)
+                    predictions = le.inverse_transform(predictions)
+                    y_test = le.inverse_transform(y_test)
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
@@ -311,20 +314,24 @@ while True:
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
                 y_string = False
-            elif select == round(sacc):
+
+            #Support Vector Machines-------------------------------------------------------------------------------
+            elif select == sacc:
                 time.sleep(3)
-                print("--------------------------Algorithm Selected--------------------------")
+                print("--------------------------AI Selected--------------------------")
                 time.sleep(2)
-                print("Algorithm Efficiency: " + str(round(sacc * 100)))
+                print("AI 3 Efficiency: " + str(round(sacc * 100)))
                 time.sleep(3)
                 print("Test Results: ")
                 time.sleep(2)
                 predictions = SVM.predict(x_test)
-                if y_string == True:
-                    predictions = le.inverse_transform(predictions)
-                    y_test = le.inverse_transform(y_test)
                 if x_string == True:
                     x_test = le.inverse_transform(x_test)
+
+                if y_string == True:
+                    print(le.classes_)
+                    predictions = le.inverse_transform(predictions)
+                    y_test = le.inverse_transform(y_test)
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
@@ -344,20 +351,24 @@ while True:
                 x_string = False
                 y_string = False
 
-            elif select == round(tacc):
+
+            #Decision Trees--------------------------------------------------------------------------------------
+            elif select == tacc:
                 time.sleep(3)
-                print("--------------------------Algorithm Selected--------------------------")
+                print("--------------------------AI Selected--------------------------")
                 time.sleep(2)
-                print("Algorithm Efficiency: " + str(round(tacc * 100)))
+                print("AI 4 Efficiency: " + str(round(tacc * 100)))
                 time.sleep(3)
                 print("Test Results: ")
                 time.sleep(2)
                 predictions = tr.predict(x_test)
-                if y_string == True:
-                    predictions = le.inverse_transform(predictions)
-                    y_test = le.inverse_transform(y_test)
                 if x_string == True:
                     x_test = le.inverse_transform(x_test)
+
+                if y_string == True:
+                    print(le.classes_)
+                    predictions = le.inverse_transform(predictions)
+                    y_test = le.inverse_transform(y_test)
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
@@ -376,7 +387,6 @@ while True:
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
                 y_string = False
-
     elif choice == "4":
         exit()
 
