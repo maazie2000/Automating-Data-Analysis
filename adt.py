@@ -153,10 +153,13 @@ while True:
         else:
             # All ALgorithm models
             linear = linear_model.LinearRegression()
-            knn = KNeighborsClassifier(n_neighbors=11)
-            SVM = svm.SVC()
+            knn = KNeighborsClassifier(n_neighbors=20)
+            SVM = svm.SVC(kernel='linear')
             tr = tree.DecisionTreeClassifier()
-            le = preprocessing.LabelEncoder()
+
+            #Labelencoders
+            y_encoder = preprocessing.LabelEncoder()
+            x_encoder = preprocessing.LabelEncoder()
 
             print_cols(file)
             based = int(input("Based On what would you like to predict " + str(cols[predict]) + ": "))
@@ -180,7 +183,7 @@ while True:
             y_string = False
 
             if is_string(file, cols[based]) == True and is_string(file, cols[predict]) == False:
-                based_option = le.fit_transform(list(data[cols[based]]))
+                based_option = x_encoder.fit_transform(list(data[cols[based]]))
                 X = np.array([based_option])
                 y = np.array(data[[cols[predict]]])
                 X = X.transpose()
@@ -188,15 +191,15 @@ while True:
                 #WORKS
 
             elif is_string(file, cols[based]) == False and is_string(file, cols[predict]) == True:
-                predict_option = le.fit_transform(list(data[cols[predict]]))
+                predict_option = y_encoder.fit_transform(list(data[cols[predict]]))
                 X = np.array(data.drop([cols[predict]], 1))
                 y = np.array(predict_option)
                 y_string = True
                 #WORKS
 
             elif is_string(file, cols[based]) == True and is_string(file, cols[predict]) == True:
-                based_option = le.fit_transform(list(data[cols[based]]))
-                predict_option = le.fit_transform(list(data[cols[predict]]))
+                based_option = x_encoder.fit_transform(list(data[cols[based]]))
+                predict_option = y_encoder.fit_transform(list(data[cols[predict]]))
                 X = np.array([based_option])
                 y = np.array(predict_option)
                 X = X.transpose()
@@ -236,11 +239,6 @@ while True:
             select = max(list)
 
 
-            # Issues To adress or fix:
-            # 1) The predict part input.
-            # 2) Add many more algorithms for better chance and proficiency
-            # 3) Convert to exe
-            # 4) Create logo and give a name to software
 
             # Linear Regression-----------------------------------------------------------------------------------
             if select == lacc:
@@ -253,12 +251,12 @@ while True:
                 time.sleep(2)
                 predictions = linear.predict(x_test)
                 if x_string == True:
-                    x_test = le.inverse_transform(x_test)
+                    x_test = x_encoder.inverse_transform(x_test)
 
                 if y_string == True:
-                    print(le.classes_)
-                    predictions = le.inverse_transform(predictions)
-                    y_test = le.inverse_transform(y_test)
+
+                    predictions = y_encoder.inverse_transform(predictions)
+                    y_test = y_encoder.inverse_transform(y_test)
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
@@ -268,11 +266,17 @@ while True:
                     print("AI Prediction For " + cols[predict] + ": " + str(predictions[x]))
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
+
+                encoded_value = x_encoder.classes_
+
+                for x in range(len(encoded_value)):
+                    print(str(x) + ") " + str(encoded_value[x]))
+
                 predict_option = int(input("Enter a " + cols[based] + ": "))
 
                 array = [[predict_option]]
                 predictions = linear.predict(array)
-
+                #predictions = y_encoder.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
@@ -290,12 +294,11 @@ while True:
                 time.sleep(2)
                 predictions = knn.predict(x_test)
                 if x_string == True:
-                    x_test = le.inverse_transform(x_test)
+                    x_test = x_encoder.inverse_transform(x_test)
 
                 if y_string == True:
-                    print(le.classes_)
-                    predictions = le.inverse_transform(predictions)
-                    y_test = le.inverse_transform(y_test)
+                    predictions = y_encoder.inverse_transform(predictions)
+                    y_test = y_encoder.inverse_transform(y_test)
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
@@ -305,11 +308,17 @@ while True:
                     print("AI Prediction For " + cols[predict] + ": " + str(predictions[x]))
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
+
+                encoded_value = x_encoder.classes_
+
+                for x in range(len(encoded_value)):
+                    print(str(x) + ") " + str(encoded_value[x]))
+
                 predict_option = int(input("Enter a " + cols[based] + ": "))
 
                 array = [[predict_option]]
                 predictions = knn.predict(array)
-
+                #predictions = y_encoder.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
@@ -320,18 +329,17 @@ while True:
                 time.sleep(3)
                 print("--------------------------AI Selected--------------------------")
                 time.sleep(2)
-                print("AI 3 Efficiency: " + str(round(sacc * 100)))
+                print("AI 2 Efficiency: " + str(round(sacc * 100)))
                 time.sleep(3)
                 print("Test Results: ")
                 time.sleep(2)
                 predictions = SVM.predict(x_test)
                 if x_string == True:
-                    x_test = le.inverse_transform(x_test)
+                    x_test = x_encoder.inverse_transform(x_test)
 
                 if y_string == True:
-                    print(le.classes_)
-                    predictions = le.inverse_transform(predictions)
-                    y_test = le.inverse_transform(y_test)
+                    predictions = y_encoder.inverse_transform(predictions)
+                    y_test = y_encoder.inverse_transform(y_test)
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
@@ -341,11 +349,17 @@ while True:
                     print("AI Prediction For " + cols[predict] + ": " + str(predictions[x]))
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
+
+                encoded_value = x_encoder.classes_
+
+                for x in range(len(encoded_value)):
+                    print(str(x) + ") " + str(encoded_value[x]))
+
                 predict_option = int(input("Enter a " + cols[based] + ": "))
 
                 array = [[predict_option]]
                 predictions = SVM.predict(array)
-
+                #predcitions = y_encoder.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
@@ -357,18 +371,17 @@ while True:
                 time.sleep(3)
                 print("--------------------------AI Selected--------------------------")
                 time.sleep(2)
-                print("AI 4 Efficiency: " + str(round(tacc * 100)))
+                print("AI 2 Efficiency: " + str(round(tacc * 100)))
                 time.sleep(3)
                 print("Test Results: ")
                 time.sleep(2)
                 predictions = tr.predict(x_test)
                 if x_string == True:
-                    x_test = le.inverse_transform(x_test)
+                    x_test = x_encoder.inverse_transform(x_test)
 
                 if y_string == True:
-                    print(le.classes_)
-                    predictions = le.inverse_transform(predictions)
-                    y_test = le.inverse_transform(y_test)
+                    predictions = y_encoder.inverse_transform(predictions)
+                    y_test = y_encoder.inverse_transform(y_test)
                 for x in range(len(predictions)):
                     # predictions[x]  what computer predicted
                     # x_test[x]       What is being used to predict
@@ -378,11 +391,16 @@ while True:
                     print("AI Prediction For " + cols[predict] + ": " + str(predictions[x]))
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
+                encoded_value = x_encoder.classes_
+
+                for x in range(len(encoded_value)):
+                    print(str(x) + ") " + str(encoded_value[x]))
+
                 predict_option = int(input("Enter a " + cols[based] + ": "))
 
                 array = [[predict_option]]
                 predictions = tr.predict(array)
-
+                #predictions = y_encoder.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
