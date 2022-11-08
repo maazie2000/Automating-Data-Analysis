@@ -137,7 +137,10 @@ while True:
             print("(2) Lined Graph")
             print("(3) Bar Graph")
             graph = input("Enter Your Graph Choice: ")
-            create_graph(cols[x], cols[y], graph)
+            try:
+                create_graph(cols[x], cols[y], graph)
+            except:
+                print("Sorry, but selected graph is not compatible with data")
 
     elif choice == "3":
         print("---------------------MACHINE LEARNING----------------------")
@@ -148,7 +151,7 @@ while True:
         # Algorithms Used Include : Linear Regression, Support Vector Machines, K Nearest Neighbors etc;
         print_cols(file)
         predict = int(input("What do you want to predict? or enter 9999 to QUIT: "))
-        if predict == "9999":
+        if predict == 9999:
             print("Leaving..")
         else:
             # All ALgorithm models
@@ -276,7 +279,7 @@ while True:
 
                 array = [[predict_option]]
                 predictions = linear.predict(array)
-                #predictions = y_encoder.inverse_transform(predictions)
+                predictions = y_encoder.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
@@ -318,7 +321,7 @@ while True:
 
                 array = [[predict_option]]
                 predictions = knn.predict(array)
-                #predictions = y_encoder.inverse_transform(predictions)
+                predictions = y_encoder.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
@@ -359,7 +362,7 @@ while True:
 
                 array = [[predict_option]]
                 predictions = SVM.predict(array)
-                #predcitions = y_encoder.inverse_transform(predictions)
+                predcitions = y_encoder.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
@@ -400,7 +403,7 @@ while True:
 
                 array = [[predict_option]]
                 predictions = tr.predict(array)
-                #predictions = y_encoder.inverse_transform(predictions)
+                predictions = y_encoder.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
