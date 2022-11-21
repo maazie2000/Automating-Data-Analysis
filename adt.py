@@ -6,6 +6,8 @@ from sklearn import linear_model, preprocessing
 from sklearn import svm
 from sklearn import metrics
 from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.naive_bayes import GaussianNB
 from sklearn import tree
 from sklearn.neighbors import KNeighborsClassifier
 import time
@@ -32,8 +34,14 @@ while file_uploaded == False:
             file_uploaded = True
         except:
             print("File Does Not Exist, Try Again!")
+    elif ".data" in file_path:
+        try:
+            file = pandas.read_csv(file_path)
+            file_uploaded = True
+        except:
+            print("File Does Not Exist, Try Again!")
     else:
-        print("File Does Not Exist, Try Again!")
+        print("File Not Compatible, Try Again!")
 
 
 #Functions For creating graphs, summarry reports, etc-----------------------------------------------------------
@@ -159,6 +167,8 @@ while True:
             knn = KNeighborsClassifier(n_neighbors=20)
             SVM = svm.SVC(kernel='linear')
             tr = tree.DecisionTreeClassifier()
+            naive = GaussianNB()
+            forest = RandomForestClassifier(n_estimators=10)
 
             #Labelencoders
             y_encoder = preprocessing.LabelEncoder()
@@ -232,13 +242,23 @@ while True:
             tr.fit(x_train, y_train)
             tacc = tr.score(x_test, y_test)
 
+            naive.fit(x_train, y_train)
+            nacc = naive.score(x_test, y_test)
+
+            forest.fit(x_train, y_train)
+            racc = forest.score(x_test, y_test)
+
+
+
             print("AI 1 Efficiency: " + str(round(lacc * 100)))
             print("AI 2 Efficiency: " + str(round(kacc * 100)))
             print("AI 3 Efficiency: " + str(round(sacc * 100)))
             print("AI 4 Efficiency: " + str(round(tacc * 100)))
+            print("AI 5 Efficiency: " + str(round(nacc * 100)))
+            print("AI 6 Efficiency: " + str(round(racc * 100)))
 
             #Determining Best ALgorithm
-            list = [lacc, kacc, sacc, tacc]
+            list = [lacc, kacc, sacc, tacc, nacc, racc]
             select = max(list)
 
 
@@ -332,7 +352,7 @@ while True:
                 time.sleep(3)
                 print("--------------------------AI Selected--------------------------")
                 time.sleep(2)
-                print("AI 2 Efficiency: " + str(round(sacc * 100)))
+                print("AI 3 Efficiency: " + str(round(sacc * 100)))
                 time.sleep(3)
                 print("Test Results: ")
                 time.sleep(2)
@@ -374,7 +394,7 @@ while True:
                 time.sleep(3)
                 print("--------------------------AI Selected--------------------------")
                 time.sleep(2)
-                print("AI 2 Efficiency: " + str(round(tacc * 100)))
+                print("AI 4 Efficiency: " + str(round(tacc * 100)))
                 time.sleep(3)
                 print("Test Results: ")
                 time.sleep(2)
@@ -408,6 +428,91 @@ while True:
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
                 y_string = False
+
+            #Naive Bayes------------------------------------------------------------------------
+
+            elif select == nacc:
+                time.sleep(3)
+                print("--------------------------AI Selected--------------------------")
+                time.sleep(2)
+                print("AI 5 Efficiency: " + str(round(nacc * 100)))
+                time.sleep(3)
+                print("Test Results: ")
+                time.sleep(2)
+                predictions = naive.predict(x_test)
+                if x_string == True:
+                    x_test = x_encoder.inverse_transform(x_test)
+
+                if y_string == True:
+                    predictions = y_encoder.inverse_transform(predictions)
+                    y_test = y_encoder.inverse_transform(y_test)
+                for x in range(len(predictions)):
+                    # predictions[x]  what computer predicted
+                    # x_test[x]       What is being used to predict
+                    # y_test[x]       what is being predicted
+                    print("-------------------------------------")
+                    print(cols[based] + ": " + str(x_test[x]))
+                    print("AI Prediction For " + cols[predict] + ": " + str(predictions[x]))
+                    print("Actual " + cols[predict] + ": " + str(y_test[x]))
+                print("\n\n")
+
+                encoded_value = x_encoder.classes_
+
+                for x in range(len(encoded_value)):
+                    print(str(x) + ") " + str(encoded_value[x]))
+
+                predict_option = int(input("Enter a " + cols[based] + ": "))
+
+                array = [[predict_option]]
+                predictions = naive.predict(array)
+                predictions = y_encoder.inverse_transform(predictions)
+                for x in range(len(predictions)):
+                    print("Predicted " + cols[predict] + ": " + str(predictions[x]))
+                x_string = False
+                y_string = False
+
+            #Random Forest-----------------------------------------------------------------------------
+            elif select == racc:
+                time.sleep(3)
+                print("--------------------------AI Selected--------------------------")
+                time.sleep(2)
+                print("AI 6 Efficiency: " + str(round(racc * 100)))
+                time.sleep(3)
+                print("Test Results: ")
+                time.sleep(2)
+                predictions = forest.predict(x_test)
+                if x_string == True:
+                    x_test = x_encoder.inverse_transform(x_test)
+
+                if y_string == True:
+                    predictions = y_encoder.inverse_transform(predictions)
+                    y_test = y_encoder.inverse_transform(y_test)
+                for x in range(len(predictions)):
+                    # predictions[x]  what computer predicted
+                    # x_test[x]       What is being used to predict
+                    # y_test[x]       what is being predicted
+                    print("-------------------------------------")
+                    print(cols[based] + ": " + str(x_test[x]))
+                    print("AI Prediction For " + cols[predict] + ": " + str(predictions[x]))
+                    print("Actual " + cols[predict] + ": " + str(y_test[x]))
+                print("\n\n")
+
+                encoded_value = x_encoder.classes_
+
+                for x in range(len(encoded_value)):
+                    print(str(x) + ") " + str(encoded_value[x]))
+
+                predict_option = int(input("Enter a " + cols[based] + ": "))
+
+                array = [[predict_option]]
+                predictions = forest.predict(array)
+                predictions = y_encoder.inverse_transform(predictions)
+                for x in range(len(predictions)):
+                    print("Predicted " + cols[predict] + ": " + str(predictions[x]))
+                x_string = False
+                y_string = False
+
+
     elif choice == "4":
         exit()
 
