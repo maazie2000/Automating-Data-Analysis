@@ -12,6 +12,10 @@ from sklearn import tree
 from sklearn.neighbors import KNeighborsClassifier
 import time
 
+
+# 6 ML Algorithms Implemented: Linear Regression, K Nearest Neighbors, Support Vector Machine, Decision Tree, Random
+# forest, Naive Bayes
+
 # Title
 print("-----------------------------------------------------------------------------------------")
 print("                               AUTOMATING DATA ANALYSIS                                   ")
@@ -81,7 +85,8 @@ def summarry_report_full(file):
     print("----------------------------------------------------------------\n")
     for x in range(len(cols)):  # iterates through that array
         print("-------------------------------------------------------------")
-        print(cols[x] + " Report: ")
+        print(cols[x] + " Report: \n")
+        print("Values" + "     Number of Appearances")
         print(file[cols[x]].value_counts())  # counts values of unique items
         print("-------------------------------------------------------------\n")
 
@@ -290,16 +295,20 @@ while True:
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
 
-                encoded_value = x_encoder.classes_
+                if x_string == True:
+                    encoded_value = x_encoder.classes_
 
-                for x in range(len(encoded_value)):
-                    print(str(x) + ") " + str(encoded_value[x]))
+                    for x in range(len(encoded_value)):
+                        print(str(x) + ") " + str(encoded_value[x]))
 
                 predict_option = int(input("Enter a " + cols[based] + ": "))
 
                 array = [[predict_option]]
                 predictions = linear.predict(array)
-                predictions = y_encoder.inverse_transform(predictions)
+
+                if y_string == True:
+                    predictions = y_encoder.inverse_transform(predictions)
+
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
@@ -332,16 +341,18 @@ while True:
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
 
-                encoded_value = x_encoder.classes_
+                if x_string == True:
+                    encoded_value = x_encoder.classes_
 
-                for x in range(len(encoded_value)):
-                    print(str(x) + ") " + str(encoded_value[x]))
+                    for x in range(len(encoded_value)):
+                        print(str(x) + ") " + str(encoded_value[x]))
 
                 predict_option = int(input("Enter a " + cols[based] + ": "))
 
                 array = [[predict_option]]
                 predictions = knn.predict(array)
-                predictions = y_encoder.inverse_transform(predictions)
+                if y_string == True:
+                    predictions = y_encoder.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
@@ -373,16 +384,18 @@ while True:
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
 
-                encoded_value = x_encoder.classes_
+                if x_string == True:
+                    encoded_value = x_encoder.classes_
 
-                for x in range(len(encoded_value)):
-                    print(str(x) + ") " + str(encoded_value[x]))
+                    for x in range(len(encoded_value)):
+                        print(str(x) + ") " + str(encoded_value[x]))
 
                 predict_option = int(input("Enter a " + cols[based] + ": "))
 
                 array = [[predict_option]]
                 predictions = SVM.predict(array)
-                predcitions = y_encoder.inverse_transform(predictions)
+                if y_string == True:
+                    predictions = y_encoder.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
@@ -414,16 +427,18 @@ while True:
                     print("AI Prediction For " + cols[predict] + ": " + str(predictions[x]))
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
-                encoded_value = x_encoder.classes_
+                if x_string == True:
+                    encoded_value = x_encoder.classes_
 
-                for x in range(len(encoded_value)):
-                    print(str(x) + ") " + str(encoded_value[x]))
+                    for x in range(len(encoded_value)):
+                        print(str(x) + ") " + str(encoded_value[x]))
 
                 predict_option = int(input("Enter a " + cols[based] + ": "))
 
                 array = [[predict_option]]
                 predictions = tr.predict(array)
-                predictions = y_encoder.inverse_transform(predictions)
+                if y_string == True:
+                    predictions = y_encoder.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
@@ -456,16 +471,18 @@ while True:
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
 
-                encoded_value = x_encoder.classes_
+                if x_string == True:
+                    encoded_value = x_encoder.classes_
 
-                for x in range(len(encoded_value)):
-                    print(str(x) + ") " + str(encoded_value[x]))
+                    for x in range(len(encoded_value)):
+                        print(str(x) + ") " + str(encoded_value[x]))
 
                 predict_option = int(input("Enter a " + cols[based] + ": "))
 
                 array = [[predict_option]]
                 predictions = naive.predict(array)
-                predictions = y_encoder.inverse_transform(predictions)
+                if y_string == True:
+                    predictions = y_encoder.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
@@ -497,16 +514,18 @@ while True:
                     print("Actual " + cols[predict] + ": " + str(y_test[x]))
                 print("\n\n")
 
-                encoded_value = x_encoder.classes_
+                if x_string == True:
+                    encoded_value = x_encoder.classes_
 
-                for x in range(len(encoded_value)):
-                    print(str(x) + ") " + str(encoded_value[x]))
+                    for x in range(len(encoded_value)):
+                        print(str(x) + ") " + str(encoded_value[x]))
 
                 predict_option = int(input("Enter a " + cols[based] + ": "))
 
                 array = [[predict_option]]
                 predictions = forest.predict(array)
-                predictions = y_encoder.inverse_transform(predictions)
+                if y_string == True:
+                    predictions = y_encoder.inverse_transform(predictions)
                 for x in range(len(predictions)):
                     print("Predicted " + cols[predict] + ": " + str(predictions[x]))
                 x_string = False
