@@ -46,7 +46,26 @@ This will produce the graph of your choice using matplotlib. Here is an example 
 
 # 4) Predict Data
 
-You can select the predict data option by entering 3. This can predict your data, given what you want to predict, and what feature do you want to use to predict.
+You can select the predict data option by entering 3. This can predict your data, given what you want to predict, and what feature do you want to use to predict. 
+
+
+![Predict1](https://user-images.githubusercontent.com/73777608/203618373-89eb94cf-c222-490c-ba2d-608af4ec9d2a.png)
+
+
+First you enter what you want to predict, then you enter based on which column do you want to predict that value. For my student database example, lets say I want to predict anyone's reading score, based on their writing score. After entering those values your screen will look similar to this:
+
+
+![image](https://user-images.githubusercontent.com/73777608/203618519-f18636e0-3d6e-4c27-979f-d527aa1c01b5.png)
+
+Some Machine learning algorithms will do better than others and the best one gets selected. In this case AI 1 gets selected. The test results show how the AI performed on the accuracy test.It shows what it predicted for different values from the dataset and what the actual value was. 
+
+![Predict 3](https://user-images.githubusercontent.com/73777608/203619233-5e8626e4-3c3f-49db-a84a-fa40bf8250d8.png)
+
+
+Scrolling down from the test results, you can see it asking you to enter a value. Here you enter the value of what you wanted to use to predict and the algorithm will give you a predcited result.
+
+![Predict 4](https://user-images.githubusercontent.com/73777608/203619449-f46881f2-5d85-46bd-9cea-a7a1186237af.png)
+
 
 
 # Updates
