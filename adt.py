@@ -201,7 +201,7 @@ while True:
             y_string = False
 
             if is_string(file, cols[based]) == True and is_string(file, cols[predict]) == False:
-                based_option = x_encoder.fit_transform(list(data[cols[based]]))
+                based_option = x_encoder.fit_transform(np.array(data[cols[based]]))
                 X = np.array([based_option])
                 y = np.array(data[[cols[predict]]])
                 X = X.transpose()
@@ -209,15 +209,15 @@ while True:
                 #WORKS
 
             elif is_string(file, cols[based]) == False and is_string(file, cols[predict]) == True:
-                predict_option = y_encoder.fit_transform(list(data[cols[predict]]))
+                predict_option = y_encoder.fit_transform(np.array(data[cols[predict]]))
                 X = np.array(data.drop([cols[predict]], 1))
                 y = np.array(predict_option)
                 y_string = True
                 #WORKS
 
             elif is_string(file, cols[based]) == True and is_string(file, cols[predict]) == True:
-                based_option = x_encoder.fit_transform(list(data[cols[based]]))
-                predict_option = y_encoder.fit_transform(list(data[cols[predict]]))
+                based_option = x_encoder.fit_transform(np.array(data[cols[based]]))
+                predict_option = y_encoder.fit_transform(np.array(data[cols[predict]]))
                 X = np.array([based_option])
                 y = np.array(predict_option)
                 X = X.transpose()
