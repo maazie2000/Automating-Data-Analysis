@@ -231,27 +231,30 @@ while True:
             # ----------------------------------------------------------------------------------------------------------
 
             # Creating Training Data
-            x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.3)
+            x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.01)
 
 
             # Determining which algorithm is best
-            linear.fit(x_train, y_train)
-            lacc = linear.score(x_test, y_test)
+            try:
+                linear.fit(x_train, y_train)
+                lacc = linear.score(x_test, y_test)
 
-            knn.fit(x_train, y_train)
-            kacc = knn.score(x_test, y_test)
+                knn.fit(x_train, y_train)
+                kacc = knn.score(x_test, y_test)
 
-            SVM.fit(x_train, y_train)
-            sacc = SVM.score(x_test, y_test)
+                SVM.fit(x_train, y_train)
+                sacc = SVM.score(x_test, y_test)
 
-            tr.fit(x_train, y_train)
-            tacc = tr.score(x_test, y_test)
+                tr.fit(x_train, y_train)
+                tacc = tr.score(x_test, y_test)
 
-            naive.fit(x_train, y_train)
-            nacc = naive.score(x_test, y_test)
+                naive.fit(x_train, y_train)
+                nacc = naive.score(x_test, y_test)
 
-            forest.fit(x_train, y_train)
-            racc = forest.score(x_test, y_test)
+                forest.fit(x_train, y_train)
+                racc = forest.score(x_test, y_test)
+            except:
+                print("The AI Model is not compatible with given data")
 
 
 
